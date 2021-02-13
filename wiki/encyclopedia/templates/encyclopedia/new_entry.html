@@ -1,0 +1,60 @@
+{% extends "encyclopedia/layout.html" %}
+
+
+{% block body %}
+
+<style>
+    #title{
+        margin-top: 20px;
+        margin-left: 50px;
+        width: 1000px;
+        background-color:gainsboro;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    #info{
+        margin-top: 10px;
+        margin-left: 50px;
+        width: 1000px;
+        height: 550px;
+        background-color:gainsboro;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    #save{
+        padding: 7px;
+        border-radius: 5px;
+        background-color: gainsboro;
+        border: none;
+        margin-top: 10px;
+        margin-left: 50px;
+    }
+    #save:hover{
+        padding: 7px;
+        background-color: aquamarine;
+        border: none;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-left: 50px;
+    }
+    #in{
+         margin-left: 50px;
+         margin-top: 20px;
+    }
+</style>
+    <h2 style="margin-left:50px">New Entry</h2>
+ 
+     <form action="{% url 'new_entry' %}" method="POST">
+         {% csrf_token %}
+         <input type="text" name="Title" id="title" placeholder="Enter Title">
+         
+         <textarea name="info" id="info" cols="30" rows="10" placeholder="Enter info"></textarea> <br>
+         <input type="submit" id="save">
+          
+         
+     </form>
+     
+      
+{% endblock %}

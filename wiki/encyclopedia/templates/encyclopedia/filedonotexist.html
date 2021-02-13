@@ -1,0 +1,11 @@
+{%extends "encyclopedia/layout.html"%}
+
+{% block title %}
+      Page Not Found
+{% endblock %}
+
+{% block body %}
+      <h1 style="margin: 20px;">"{{title}}" looks like new to me!!</h1>
+     <a href="{% url 'new_entry' %}"><h3 style="margin-left: 40px;">add new file</h3></a>
+
+{% endblock %}
