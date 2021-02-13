@@ -1,7 +1,7 @@
 from django.shortcuts import render,reverse,HttpResponseRedirect
 from django.contrib import messages
 from . import util
-
+import random
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -25,15 +25,22 @@ def search_item(request):
         for i in util.list_entries():
             if value in i:
                 l.append(i)
-        return render(request,"encyclopedia/search-results.html",{"results":l})
-
+        if len(l):
+            return render(request,"encyclopedia/search-results.html",{"results":l})
+        else:
+            return HttpResponseRedirect(reverse("get_entry",kwargs={"title":value}))
 def new_entry(request):
  if request.method=="POST":
   title=request.POST.get("Title")
   info=request.POST.get("info")
   if title in util.list_entries():
       messages.error(request,"Entry already exists")
+       
   else:
       util.save_entry(title,info)
       return HttpResponseRedirect(reverse("get_entry",kwargs={"title":title}))
  return render(request,"encyclopedia/new_entry.html")
+
+def get_random(request):
+    n=random.randint(0,len(util.list_entries())-1)
+    return HttpResponseRedirect(reverse("get_entry",kwargs={"title":util.list_entries()[n]}))

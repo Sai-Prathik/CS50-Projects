@@ -1,7 +1,9 @@
 {% extends "encyclopedia/layout.html"%}
 
 {% block body %}
+<h2 style="margin-left: 10px;">Search-Results</h2>
+<ul>
 {% for value in results%}
-    <a href="/wiki/{{value}}">{{value}}</a>
-{% endfor %}
+<a href="/wiki/{{value}}"><li>{{value}}</li></a>
+{% endfor %}</ul>
 {% endblock %}
