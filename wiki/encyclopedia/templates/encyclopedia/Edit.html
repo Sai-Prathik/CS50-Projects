@@ -2,12 +2,13 @@
 
 
 {% block body %}
-<link rel="stylesheet" href="<link href='https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css' rel='stylesheet'>">
+
 <style>
     #title{
         margin-top: 20px;
         margin-left: 50px;
         width: 1000px;
+        height: 40px;
         background-color:gainsboro;
         border: none;
         padding: 10px;
@@ -44,33 +45,20 @@
          margin-top: 20px;
     }
 </style>
-    {% for msg in messages %}
-    <div class="alert alert-primary" id="msg" role="alert">
-        {{msg}}
-        
-      </div>
-    {% endfor %}
     {% block head %}
-    <h2 style="margin-left:50px">New Entry</h2>
+    <h2 style="margin-left:50px">Edit Entry</h2>
     {% endblock %}
 
     
-     <form action="{% url 'new_entry' %}" method="POST">
+     <form action="{% url 'edit_entry' %}" method="POST">
          {% csrf_token %}
-         <input type="text" name="Title" id="title" placeholder="Enter Title">
+         <textarea name="e_title" id="title" >{{head}}</textarea>
          
-         <textarea name="info" id="info" cols="30" rows="10" placeholder="Enter info"></textarea> <br>
+         <textarea name="e_info" id="info" cols="30" rows="10" placeholder="Edit info">{{info}}</textarea> <br>
          <input type="submit" id="save"  >
           
          
      </form>
-
-     <script>
-         setTimeout(function(){
-             if ($('#msg').length>0){
-                 $("#msg").remove();
-             }
-         },2000)
-     </script>
+     
       
 {% endblock %}

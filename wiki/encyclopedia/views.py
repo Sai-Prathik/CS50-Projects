@@ -35,7 +35,7 @@ def new_entry(request):
   info=request.POST.get("info")
   if title in util.list_entries():
       messages.error(request,"Entry already exists")
-       
+      return HttpResponseRedirect(reverse("new_entry"))
   else:
       util.save_entry(title,info)
       return HttpResponseRedirect(reverse("get_entry",kwargs={"title":title}))
@@ -44,3 +44,15 @@ def new_entry(request):
 def get_random(request):
     n=random.randint(0,len(util.list_entries())-1)
     return HttpResponseRedirect(reverse("get_entry",kwargs={"title":util.list_entries()[n]}))
+
+
+def edit(request):
+    if request.method=="GET":
+        t=request.GET.get("entry")
+        return render(request,"encyclopedia/Edit.html",{"head":t,"info":util.get_entry(t)})
+    elif request.method=="POST":
+        t=request.POST.get("e_title")
+        i=request.POST.get("e_info")
+        util.save_entry(t,i)
+        return HttpResponseRedirect(reverse("get_entry",kwargs={"title":t}))
+    
