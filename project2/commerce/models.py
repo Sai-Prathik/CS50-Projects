@@ -21,5 +21,9 @@ class listings(models.Model):
           return self.end_date.date()
      def get_now(self):
           return datetime.now()
+     def get_category(self):
+          for i in CATEGORIES:
+               if i[0]==self.category:
+                    return i[1]
      #updated_on=models.DateField(auto_now=True,default=now)
      
