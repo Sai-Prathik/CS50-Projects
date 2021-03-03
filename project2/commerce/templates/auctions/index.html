@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    
+    TODO
+    <br>
+    {% for i in model %}
+     
+    <br>
+     <a href="listing/{{i.item_name}}">{{i.item_name}}</a> <br>
+     Bid Price: {{i.bid_price}} <br>
+     Description: {{i.item_description}}  <br>
+     Created on: {{i.get_date}}
+      <br>
+      
+
+    {% endfor %}
+{% endblock %}
