@@ -1,0 +1,34 @@
+{% extends 'auctions/layout.html'%}
+
+
+{% block body%}
+ 
+ <h1>{{item.item_name}}</h1><br>
+  {% if item.img_url == "No Image" %}
+    <p>No Image</p>
+   {% else %}
+   <img src={{item.img_url}} alt="">
+   {% endif %}
+ <h5>{{item.item_description}}</h5><br>
+
+  <ul>
+     
+
+     <li>Bid Price: {{item.bid_price}}</li>
+     <li>Created by: {{item.get_date}}</li>
+     <li>End on: {{item.get_end_date}}</li>
+     <li>Category: {{item.get_category}}</li>
+     {% if item.created_by == user %}
+      <li>Created by You</li>
+     {% else%}
+      <li>Created by {{item.created_by}}</li>
+     {% endif %}
+      
+     <li><form action="{% url 'watchlist' %}" method="POST">
+         {% csrf_token %}
+        <input type="hidden" name="addtowatchlist" value={{item.id}} >
+        <button type="submit" class="btn btn-primary"  >Add to Watchlist</button>
+     </form></li>
+  </ul>
+ 
+{% endblock %}

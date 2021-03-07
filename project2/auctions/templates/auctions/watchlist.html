@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+   
+     {% for i in item%}
+
+          {{i.item.item_name}} <br>
+          {{i.count}}<br>
+
+     {% endfor %}
+      
+
+{% endblock %}

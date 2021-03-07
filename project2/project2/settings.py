@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'commerce',
+    'auctions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,7 +85,7 @@ DATABASES = {
         'HOST': 'localhost'
     }
 }
-AUTH_USER_MODEL = 'commerce.Localuser'
+AUTH_USER_MODEL = 'auctions.Localuser'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
