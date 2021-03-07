@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% for i in personal %}
+
+    {{i.item_name}}<br>
+    {{i.bid_price}}<br>
+    {{i.item_description}}
+{% endfor %}
+{% endblock %}
