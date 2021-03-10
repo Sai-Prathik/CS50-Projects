@@ -4,8 +4,13 @@
    
      {% for i in item%}
 
-          {{i.item.item_name}} <br>
-          {{i.count}}<br>
+          <a href="listing/{{i.item.item_name}}">{{i.item.item_name}} </a><br>
+          {{i.count}} <br>
+          <form action="{% url 'remove' %}" method="POST">
+               {% csrf_token %}
+        <input type="hidden" name="removefromwatchlist" value={{i.id}} >
+        <button type="submit" class="btn btn-primary"  >Remove from Watchlist</button>
+          </form>
 
      {% endfor %}
       

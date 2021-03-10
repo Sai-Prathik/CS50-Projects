@@ -3,9 +3,32 @@
 {% block body %}
 
 {% for i in personal %}
+ 
+{{i.item_name}}
+   <ul>
+       {% if i.item_active %}
 
-    {{i.item_name}}<br>
-    {{i.bid_price}}<br>
-    {{i.item_description}}
+         <li>Active</li>
+        {% else %}
+        <li>Inactive</li>
+       {% endif %}
+    <li>$ {{i.bid_price}} </li>
+    <li>{{i.item_description}}</li>
+    {% if i.current_price == 0.0 %}
+       <li>No Bids Yet</li>
+    {% else %}
+        <li>$ {{i.current_price}}</li>
+    {% endif %}
+    <li><form action="{% url 'edit_details'%}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" value="{{i.item_name}}" name="edit">
+        <button type="submit" class="btn btn-primary"  >Edit details</button>
+    </form></li>
+
+   
+    </ul>
+    
+    
+    
 {% endfor %}
 {% endblock %}

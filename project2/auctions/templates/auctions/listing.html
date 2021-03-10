@@ -3,32 +3,61 @@
 
 {% block body%}
  
- <h1>{{item.item_name}}</h1><br>
+ {% for i in messages %}
+ <div class="alert alert-primary" id="msg" role="alert">{{i}}</div>
+ {% endfor %}
+ <h1>{{item.item_name}}</h1>
+ 
+      <p>Created by {{item.created_by}}</p>
+     
+     <br>
   {% if item.img_url == "No Image" %}
     <p>No Image</p>
    {% else %}
    <img src={{item.img_url}} alt="">
    {% endif %}
  <h5>{{item.item_description}}</h5><br>
-
+{% if item.item_active %}
   <ul>
      
 
-     <li>Bid Price: {{item.bid_price}}</li>
-     <li>Created by: {{item.get_date}}</li>
+     <li>Starting Bid : ${{item.bid_price}}</li>
+     <li>Created on: {{item.get_date}}</li>
      <li>End on: {{item.get_end_date}}</li>
      <li>Category: {{item.get_category}}</li>
-     {% if item.created_by == user %}
-      <li>Created by You</li>
-     {% else%}
-      <li>Created by {{item.created_by}}</li>
+     {% if user_bid %}
+      <li>Your Bid: $ {{user_bid.bid_price}}</li>
+      
      {% endif %}
+        <li> <form action="{% url 'commit_bid' %}" method="POST">
+         {% csrf_token %}
+        <input type="number" name="save_bid" value="{{item.current_price}}" >
+        <input type="hidden" name="item" value="{{item.item_name}}">
+        <button type="submit" class="btn btn-primary"  >Bid</button>
+     </form>
+     </li>
+     
       
      <li><form action="{% url 'watchlist' %}" method="POST">
          {% csrf_token %}
         <input type="hidden" name="addtowatchlist" value={{item.id}} >
         <button type="submit" class="btn btn-primary"  >Add to Watchlist</button>
-     </form></li>
+     </form></li> 
+
+     <li></li>
+      
+    
   </ul>
+{% else %}
+  <ul>
+     {% if  highest_bid %}
+     <li>Bidding won by {{highest_bid.user}} with ${{item.current_price}}</li>
+     {% else %}
+     <li>No Bids</li>
+     {% endif %}
+  </ul>
+{% endif %}
+
+
  
 {% endblock %}

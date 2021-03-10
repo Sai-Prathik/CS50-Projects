@@ -1,19 +1,43 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
+ 
 {% block body %}
+
     <h2>Active Listings</h2>
     
     TODO
     <br>
+    <div class="row">
     {% for i in model %}
-     
-    <br>
-     <a href="listing/{{i.item_name}}">{{i.item_name}}</a> <br>
-     Bid Price: {{i.bid_price}} <br>
-     Description: {{i.item_description}}  <br>
-     Created on: {{i.get_date}}
-      <br>
+    {% if user != i.created_by %}
+    <div class="column">
+    <div class="d-flex justify-content container mt-5">
+    <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
+      <div class="about-product text-center mt-2">
+         
+          <div>
+              <h4><a class="nav-item" href="listing/{{i.item_name}}">{{i.item_name}}</a></h4>
+              <h6 class="mt-0 text-black-50">{{i.get_category}}</h6>
+              {% if i.item_active %}
+              <h6 class="mt-0 text-black-50">Active</h6>
+              {% else %}
+              <h6 class="mt-0 text-black-50">Inactive</h6>
+              {% endif %}
+          </div>
+      </div>
+      <div class="stats mt-0">
+        
+        <div class="d-flex justify-content-between total font-weight-bold mt-4"><span>Bid Price:</span><span>${{i.current_price}}</span></div>
+        <div class="d-flex justify-content-between total text-black-50 mt-4"><span>Created on:</span><span>{{i.get_date}}</span></div>
+        <div class="d-flex justify-content-between total text-black-50 mt-2"><span>Created by:</span><span>{{i.created_by}}</span></div>
+  </div>
+     </div>
+    </div>
+   
+  </div>
+       {% endif %}
       
 
     {% endfor %}
+  </div>
 {% endblock %}
