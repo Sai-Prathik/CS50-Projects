@@ -11,7 +11,7 @@ class Localuser(AbstractUser):
      pass
 
 class Listings(models.Model):
-     item_name=models.CharField(max_length=20,default="Item")
+     item_name=models.CharField(max_length=90,default="Item")
      item_description=models.TextField(max_length=10000,default="No Description")
      bid_price=models.FloatField(default=0.0)
       
@@ -19,10 +19,12 @@ class Listings(models.Model):
      end_date=models.DateTimeField(blank=True)
      created_time=models.DateTimeField(auto_now_add=True)
      created_by=models.ForeignKey(Localuser,on_delete=models.CASCADE,null=True,related_name="creator")
-     img_url=models.CharField(default="No Image",max_length=10000)
+     img_url=models.CharField(default="No Image",max_length=10000000)
      current_price=models.FloatField(default=0.0)
      item_active=models.BooleanField(default=True)
 
+     def get_diff(self,posted):
+          return self.get_now-posted
      def end_list(self):
           obj=Listings.objects.filter(id=self.id)
           print(self)
@@ -55,3 +57,4 @@ class Comments(models.Model):
      item=models.ForeignKey(Listings,on_delete=models.CASCADE)
      comments=models.TextField(max_length=100000,default="No Comments")
      like=models.BooleanField(default=False)
+     posted_time=models.DateTimeField(auto_now_add=True)

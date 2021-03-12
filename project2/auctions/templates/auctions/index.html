@@ -16,18 +16,30 @@
       <div class="about-product text-center mt-2">
          
           <div>
-              <h4><a class="nav-item" href="listing/{{i.item_name}}">{{i.item_name}}</a></h4>
+              <h4><a class="nav-item" href="listing/{{i.item_name}}">{{i.item_name}}</a>{% if i.item_active %}
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+               <path fill="#00FF00" d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"></path>
+               <path fill="#00FF00" d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"></path>
+               </svg>
+               {% else %}
+               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+                  <path fill="#FF0000" d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"></path>
+                  <path fill="#FF0000" d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"></path>
+                  </svg>
+                  {% endif %}</h4>
               <h6 class="mt-0 text-black-50">{{i.get_category}}</h6>
-              {% if i.item_active %}
-              <h6 class="mt-0 text-black-50">Active</h6>
-              {% else %}
-              <h6 class="mt-0 text-black-50">Inactive</h6>
-              {% endif %}
+               
           </div>
       </div>
       <div class="stats mt-0">
         
-        <div class="d-flex justify-content-between total font-weight-bold mt-4"><span>Bid Price:</span><span>${{i.current_price}}</span></div>
+        <div class="d-flex justify-content-between total font-weight-bold mt-4"><span>Bid Price:</span>
+          {% if i.current_price %}
+          <span>${{i.current_price}}</span>
+          {% else %}
+          <span>${{i.bid_price}}</span>
+          {% endif %}
+        </div>
         <div class="d-flex justify-content-between total text-black-50 mt-4"><span>Created on:</span><span>{{i.get_date}}</span></div>
         <div class="d-flex justify-content-between total text-black-50 mt-2"><span>Created by:</span><span>{{i.created_by}}</span></div>
   </div>

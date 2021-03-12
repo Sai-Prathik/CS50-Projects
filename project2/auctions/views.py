@@ -5,11 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from auctions.forms import New_listing,Edit_form
-from .models import Localuser,Listings,Watchlist,Bid
+from .models import Localuser,Listings,Watchlist,Bid,Comments
 from datetime import datetime 
 from django.db.models import F
 from django.contrib import messages
-
+from .models import CATEGORIES
 def index(request):
     model=Listings.objects.all()
     return render(request, "auctions/index.html",{"model":model,"now":datetime.now().date(),"user":request.user})
@@ -93,7 +93,8 @@ def listing(request,name):
         user_bid=Bid.objects.get(user=request.user.id,list_item=item.id)
     else:
         user_bid=None
-    return render(request,"auctions/listing.html",{"item":item,"user_bid":user_bid,"highest_bid":highest_bidder})
+    item_obj=Comments.objects.filter(item=item)
+    return render(request,"auctions/listing.html",{"item":item,"user_bid":user_bid,"highest_bid":highest_bidder,"comments":item_obj})
     
 @login_required
 def watchlist(request):
@@ -159,4 +160,21 @@ def commit_bid(request):
     return HttpResponseRedirect(reverse("listing",kwargs={"name":item}))
 
 
- 
+def comments(request):
+     
+    if request.method=="POST":
+      
+     item=request.POST.get("item")
+     item=Listings.objects.get(id=item)
+     comment=request.POST.get("comment")
+     model=Comments(user=request.user,item=item,comments=comment)
+     model.save()
+    
+    
+    return HttpResponseRedirect(reverse("listing",kwargs={"name":item.item_name}))
+
+def categories(request):
+        l=[]
+        for i in CATEGORIES:
+            l.append(i[1])
+        return render(request,"auctions/categories.html",{"category":l})
