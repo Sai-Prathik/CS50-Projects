@@ -178,3 +178,13 @@ def categories(request):
         for i in CATEGORIES:
             l.append(i[1])
         return render(request,"auctions/categories.html",{"category":l})
+
+def cat(request,category):
+    d={}
+    for i,j in CATEGORIES:
+        if not j in d:
+            d[j]=i
+     
+    cat_prod=Listings.objects.filter(category=d[category])
+    print(cat_prod)
+    return render(request,"auctions/cat_products.html",{"category":cat_prod})

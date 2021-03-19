@@ -16,5 +16,6 @@ urlpatterns = [
     path("remove_from_watchlist",views.remove_from_watchlist,name="remove"),
     path("commit_bid",views.commit_bid,name="commit_bid"),
     path("post_comments",views.comments,name="comments"),
-    path("categories",views.categories,name="categories")
+    path("categories",views.categories,name="categories"),
+    path("category/<str:category>",views.cat,name="cat_products")
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
