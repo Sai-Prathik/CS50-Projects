@@ -4,12 +4,28 @@
 {% block title%}Create Listing{% endblock %}
 {% block body%} 
 
+
+<div class="new_list">
+<h4>Create New Item</h4>
+
  <form method="POST" action="{% url 'new_listing'%}">
      {% csrf_token %}
-      {{form|crispy}}
-      <br>
-      <input type="submit">
+     <label for="title">Title</label>
+     
+     
+     <div class="md-form mb-5" name="title">{{form.title}}</div>
+     <label for="description">Description</label>
+      <div class="md-form mb-5" name="description">{{form.description}}</div>
+      <label for="price">Starting Price</label>
+      <div class="md-form mb-5" name="price">{{form.bid_price}}</div>
+      <label for="category">Category</label>
+      <div class="md-form mb-5" name="category">{{form.category}}</div>
+      <label for="end_date">Expiry Date</label>
+      <div class="md-form mb-5" name="end_date">{{form.end_date}}</div>
+      <label for="image">Image Url</label>
+      <div class="md-form mb-5" name="image">{{form.image}}</div>
+      <button type="submit" class="btn btn-primary">Create Item</button>
  </form>
-
+</div>
 
 {% endblock %}

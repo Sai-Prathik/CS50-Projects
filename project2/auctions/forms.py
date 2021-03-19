@@ -1,4 +1,5 @@
 from django import forms
+from . import views
 CATEGORIES=[("F","Fashion"),("T","Toys"),("E","Electronics"),("H","Home"),("A","Antique")]
 class DateInput(forms.DateInput):
     input_type='date'
@@ -10,3 +11,13 @@ class New_listing(forms.Form):
     category=forms.CharField(widget=forms.Select(choices=CATEGORIES))
     end_date=forms.DateField(widget=DateInput)
     image=forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Enter Image URL"}))
+
+class Edit_form(forms.Form):
+     
+    
+    title=forms.CharField(widget=forms.TextInput(attrs={"value":"obj.item_name"}))
+    
+
+
+
+    

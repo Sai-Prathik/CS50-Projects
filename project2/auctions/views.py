@@ -1,16 +1,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from auctions.forms import New_listing
-from .models import Localuser,Listings,Watchlist
+from auctions.forms import New_listing,Edit_form
+from .models import Localuser,Listings,Watchlist,Bid,Comments
 from datetime import datetime 
 from django.db.models import F
-
+from django.contrib import messages
+from .models import CATEGORIES
 def index(request):
     model=Listings.objects.all()
-    return render(request, "auctions/index.html",{"model":model,"now":datetime.now().date()})
+    return render(request, "auctions/index.html",{"model":model,"now":datetime.now().date(),"user":request.user})
 
 
 def login_view(request):
@@ -63,7 +65,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
-
+@login_required
 def create_listing(request):
      
     if request.method=="POST":
@@ -83,25 +85,106 @@ def create_listing(request):
 
 def listing(request,name):
     item=Listings.objects.get(item_name=name)
-    return render(request,"auctions/listing.html",{"item":item})
-
+    if Bid.objects.filter(list_item=item.id,bid_price=item.current_price).exists():
+        highest_bidder=Bid.objects.get(list_item=item.id,bid_price=item.current_price)
+    else:
+        highest_bidder=None
+    if Bid.objects.filter(user=request.user.id,list_item=item.id).exists():
+        user_bid=Bid.objects.get(user=request.user.id,list_item=item.id)
+    else:
+        user_bid=None
+    item_obj=Comments.objects.filter(item=item)
+    return render(request,"auctions/listing.html",{"item":item,"user_bid":user_bid,"highest_bid":highest_bidder,"comments":item_obj})
+    
+@login_required
 def watchlist(request):
      if request.method=="POST":
-         item=request.GET.get("addtowatchlist")
+         item_name=request.POST.get("addtowatchlist")
           
-         if not Watchlist.objects.filter(user=request.user,item=item).exists():
+         if not Watchlist.objects.filter(user=request.user,item=item_name).exists():
             item=request.POST.get("addtowatchlist")
             item=Listings.objects.get(id=item)
             model=Watchlist(item=item,user=request.user)
             model.save()
          else:
-             item=Watchlist.objects.filter(user=request.user,item=item)
+             item=Watchlist.objects.filter(user=request.user,item=item_name)
              item.update(count=F("count")+1)
+      
      item=Watchlist.objects.filter(user=request.user)
      return render(request,"auctions/watchlist.html",{"item":item})
-      
 
+def remove_from_watchlist(request):
+    if request.method=="POST":
+        X=request.POST.get("removefromwatchlist")
+        print(X)
+        removed_item=Listings.objects.get(item=X)
+        Watchlist.objects.filter(id=X).delete()
+    return HttpResponseRedirect(reverse("watchlist"))
+        
+      
+@login_required
 def personal_listing(request):
     personal=Listings.objects.filter(created_by=request.user)
-    print(personal)
+     
     return render(request,"auctions/personal_listing.html",{"personal":personal})
+
+
+def edit(request):
+    
+    if request.method=="POST":
+        item=request.POST.get("edit")
+        item_obj=Listings.objects.get(item_name=item)
+         
+    return render(request,"auctions/edit.html",{"Form":Edit_form(),"item":item_obj})
+
+def commit_bid(request):
+    if request.method=="POST":
+        print("entered")
+        bid_price=request.POST.get("save_bid")
+        item=request.POST.get("item")
+        obj=Listings.objects.get(item_name=item)
+        print(obj.item_name)
+        if obj.current_price<float(bid_price):
+            obj1=Listings.objects.filter(item_name=item)
+            obj1.update(current_price=float(bid_price))
+            if not Bid.objects.filter(user=request.user,list_item=obj).exists():
+                model=Bid(user=request.user,list_item=obj,bid_price=float(bid_price))
+                model.save()
+            
+            else:
+                model=Bid.objects.filter(user=request.user,list_item=obj)
+                model.update(bid_price=float(bid_price))
+        else:
+            messages.error(request,"Sorry!! Bid should be higher than current bid")
+        
+    return HttpResponseRedirect(reverse("listing",kwargs={"name":item}))
+
+
+def comments(request):
+     
+    if request.method=="POST":
+      
+     item=request.POST.get("item")
+     item=Listings.objects.get(id=item)
+     comment=request.POST.get("comment")
+     model=Comments(user=request.user,item=item,comments=comment)
+     model.save()
+    
+    
+    return HttpResponseRedirect(reverse("listing",kwargs={"name":item.item_name}))
+
+def categories(request):
+        l=[]
+        for i in CATEGORIES:
+            l.append(i[1])
+        return render(request,"auctions/categories.html",{"category":l})
+
+def cat(request,category):
+    d={}
+    for i,j in CATEGORIES:
+        if not j in d:
+            d[j]=i
+     
+    cat_prod=Listings.objects.filter(category=d[category])
+    print(cat_prod)
+    return render(request,"auctions/cat_products.html",{"category":cat_prod})

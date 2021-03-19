@@ -1,34 +1,96 @@
 {% extends 'auctions/layout.html'%}
-
+{% load static %}
+<link rel="stylesheet" href="{% static 'auctions/listing.css' %}"> 
 
 {% block body%}
- 
- <h1>{{item.item_name}}</h1><br>
+
+
+
+ {% for i in messages %} 
+ <div class="alert alert-primary" id="msg" role="alert">{{i}}</div>
+ {% endfor %}
+ <h1>{{item.item_name}}  
+    {% if item.item_active %}
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+   <path fill="#00FF00" d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"></path>
+   <path fill="#00FF00" d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"></path>
+   </svg>
+   {% else %}
+   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+      <path fill="#FF0000" d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"></path>
+      <path fill="#FF0000" d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"></path>
+      </svg>
+      {% endif %}
+</h1>
+   
+      <p>Created by {{item.created_by}}</p>
+     
+     <br>
   {% if item.img_url == "No Image" %}
     <p>No Image</p>
    {% else %}
    <img src={{item.img_url}} alt="">
    {% endif %}
  <h5>{{item.item_description}}</h5><br>
-
+{% if item.item_active %}
   <ul>
      
 
-     <li>Bid Price: {{item.bid_price}}</li>
-     <li>Created by: {{item.get_date}}</li>
-     <li>End on: {{item.get_end_date}}</li>
+     <li>Starting Bid : ${{item.bid_price}}</li>
+     <li>Created on: {{item.get_date}}</li>
+     <li>Ends on: {{item.get_end_date}}</li>
      <li>Category: {{item.get_category}}</li>
-     {% if item.created_by == user %}
-      <li>Created by You</li>
-     {% else%}
-      <li>Created by {{item.created_by}}</li>
-     {% endif %}
+     {% if user_bid %}
+      <li>Your Bid: $ {{user_bid.bid_price}}</li>
       
-     <li><form action="{% url 'watchlist' %}" method="POST">
+     {% endif %}
+     {% if user.is_authenticated %}
+        <li> <form action="{% url 'commit_bid' %}" method="POST">
+         {% csrf_token %}
+        <input type="number" name="save_bid" value="{{item.current_price}}" >
+        <input type="hidden" name="item" value="{{item.item_name}}">
+        <button type="submit" class="btn btn-primary"  >Bid</button>
+     </form> <span><form action="{% url 'watchlist' %}" method="POST">
          {% csrf_token %}
         <input type="hidden" name="addtowatchlist" value={{item.id}} >
         <button type="submit" class="btn btn-primary"  >Add to Watchlist</button>
-     </form></li>
+     </form></span> </li>
+
+     <li>Comments</li> <br>
+       
+     {% for i in comments %}
+     <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+ 
+ 
+{{i.user}} <h6 class="mt-0 text-black-50">{{i.posted_time}}</h6>  
+     {{i.comments}}<br><br>
+
+     {% endfor %}
+       
+     <form action="{% url 'comments' %}" method="POST">
+        {% csrf_token %}
+         <textarea name="comment"    cols="50" rows="1"></textarea> 
+        <input type="hidden" value={{item.id}} name="item"><br>
+        <button type="submit">Post</button>
+     </form>
+
+     {% else %}
+     <li>Login to participate in auction</li>
+     {% endif %}
+      
+    
   </ul>
+{% else %}
+  <ul>
+     {% if  highest_bid %}
+     <li>Auction won by {{highest_bid.user}} with ${{item.current_price}}</li>
+     {% else %}
+     <li>No Bids</li>
+     {% endif %}
+  </ul>
+{% endif %}
+
+
  
 {% endblock %}
