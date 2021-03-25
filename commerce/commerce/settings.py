@@ -76,12 +76,15 @@ WSGI_APPLICATION = 'commerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'commerce',
+        'USER': 'postgres',
+        'PASSWORD':'root',
+        'HOST': 'localhost'
     }
 }
 
-AUTH_USER_MODEL = 'auctions.User'
+AUTH_USER_MODEL = 'auctions.Localuser'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
