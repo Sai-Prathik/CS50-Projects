@@ -1,5 +1,66 @@
 {% extends "network/layout.html" %}
-
+{% load static %}
 {% block body %}
-    TODO
+    <div id="title"></div>
+
+    <div id="search-bar">
+        <form id="search_bar">
+        <input type="text" id="search-key">
+        <input type="submit" id="search" value="Search">
+    </form>
+    </div>
+    
+    <div id="profile-page">
+        <div class="dashboard">
+            <div class="profile-pic"><img src='https://image.flaticon.com/icons/png/128/3011/3011270.png' alt=""></div>
+            <div class="followers"></div>
+            <div id="username"></div>
+            
+            <button id="follow">Follow</button> 
+             <button id="edit-profile">Edit Profile</button> 
+            
+        </div>
+        <div class="posts" id="profile_posts"></div>
+    </div>
+        
+    <div id="search-results"> 
+        <div id="results"></div>
+    </div>
+
+    <div id="edit-page">
+        <form id="edit-post-form">
+            <textarea name="" id="edit-post-input" cols="75" rows="8
+            "></textarea>
+            <input type="submit" id="edit-post" value="Tweet">
+
+       </form>
+    </div>
+    
+    <div id="posts">
+        <div id="posts">
+            <form id="post-form">
+                 <textarea name="" id="post-input" cols="75" rows="8
+                 "></textarea>
+                 <input type="submit" id="add-post" value="Tweet">
+
+            </form>
+        </div>
+        <div class="posts" id="all_posts"></div>
+    </div>
+
+
+
+    <div id="following-page"></div>
+
+ 
+
+      
+      
+
+
+      
+{% endblock %}
+
+{% block script %}
+         <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}
