@@ -1,0 +1,182 @@
+body{
+    overflow-x: hidden;
+}
+ 
+
+#title{
+    color:white;
+    position: absolute;
+    top:75px;
+    left:27%;
+    font-size: x-large;
+    font-weight: bolder;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     
+}
+#profile-page{
+    position:relative;
+    top:70px;
+    
+     
+     
+}
+.dashboard{
+     
+    width:46%;
+    padding:30px;
+    overflow-x: hidden;
+    position: relative;
+    top:20%;
+    left:25%;
+    border:solid #5de9eb;
+    margin:0px;
+    
+}
+
+.dashboard:hover{
+    width:46%;
+    padding:30px;
+    display:block;
+    position: relative;
+    top:20%;
+    left:25%;
+    border:solid #5de9eb;
+    background-color:#1c2e4a ;
+    margin:0px;
+}
+
+.profile-pic{
+    position:relative;
+}
+
+#username{
+    color: white;
+    position: relative;
+    top:15px;
+   
+    font-weight: bolder;
+    font-size: larger;
+}
+
+#follow,#edit-profile{
+    position:relative;
+    top:20px;
+    border-radius:25px;
+    padding:7px;
+    display:inline;
+    background-color: #1DA1F2;
+    outline: none;
+    border: none;
+}
+
+.followers{
+    display:inline;
+    position:relative;
+}
+#follow,#edit-profile:hover{
+    position:relative;
+    top:20px;
+    display:inline;
+    border-radius:25px;
+    padding:7px;
+    background-color: hsl(203, 86%, 59%);
+    outline: none;
+    border: none;
+}
+#search-bar{
+    position:relative; 
+    display:inline; 
+    top:20px;
+    left:75%;
+}
+#search-key{
+    border-radius:10px,0px;
+    border-radius:10px 0px 0px 10px ;
+    background-color: hsl(218, 48%, 35%);
+    padding:5px;
+    border:none;
+    outline:none;
+    color:aliceblue
+    
+} 
+  
+#search {
+    padding:5px;
+    border:none;
+    border-radius:0px 10px 10px 0px ;
+    background-color: #FF8C00;
+    color:white;    
+}  
+
+.followers{
+    color:white;
+     position:relative;
+     float:right;
+     right:30px;
+    font-weight: bolder;
+    font-size: large;
+}
+
+
+
+#post-input{
+    background-color:#203354;
+    outline :  none;
+    color: white;
+    
+}
+#add-post{
+    position:relative;
+    top:40px;
+    left:-60px;
+    padding:7px;
+    border-radius: 20px;
+    border:none;
+    width: auto;
+    background-color: #1DA1F2;
+}
+
+#posts{
+    position:relative;
+    left:13%;
+    top: 25px;
+
+}
+
+#all_posts{
+    position:relative;
+    top:50px;
+    left:7%;
+}
+
+.posts{
+    position:relative;
+    width: 50%;
+    left:23%;
+    padding:30px; 
+    display:block;
+    border-radius: 30px;
+    top:10px;
+    overflow: hidden;
+} 
+
+#edit-post-input{
+    background-color:#203354;
+    outline :  none;
+    position: relative;
+    left: 30%;
+    top:50px;
+    color: white;
+}
+
+#edit-post{
+    position:relative;
+    top:90px;
+    left:390px;
+    padding:7px;
+    border-radius: 20px;
+    border:none;
+    width: auto;
+    background-color: #1DA1F2;
+
+}
