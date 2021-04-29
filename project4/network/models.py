@@ -22,7 +22,7 @@ class User(AbstractUser):
 class Posts(models.Model):
      user=models.ForeignKey(User,on_delete=models.CASCADE)
      post=models.TextField(default="No Post")
-     time_stamp=models.TimeField(auto_now_add=True)
+     time_stamp=models.DateTimeField(auto_now=True)
      likes=models.ManyToManyField(User,related_name="likes")
 
      def serialize(self,id,name=None):   

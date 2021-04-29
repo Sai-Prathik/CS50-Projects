@@ -29,6 +29,15 @@ def get_posts(request,type):
     if type=="profile":
         l=User.objects.filter(username=request.user)
         return JsonResponse([i.serialize() for i in l],safe=False)
+    elif type=="all_posts":
+        print("all_posts")
+        l=Posts.objects.all()
+        l=sorted(l,key=lambda X:X.time_stamp,reverse=True)
+        t=[]
+        for i in l:
+            if i.user.username!=request.user:
+                t.append(i)
+        return JsonResponse([i.serialize(request.user) for i in t],safe=False)
     elif type=="posts":
         followers=Follows.objects.filter(follower=request.user)
         for i in followers:
@@ -41,11 +50,14 @@ def get_posts(request,type):
         if request.method!="POST":
           return JsonResponse({"error": "POST request required."}, status=400)
         else:
-             
             data=json.loads(request.body)
             l=User.objects.filter(username=data.get("search_key"))
             print(l)
             return JsonResponse([i.serialize(request.user) for i in l],safe=False)
+    elif type=="following":
+        obj=Follows.objects.filter(follower=request.user)
+        print([i.user.serialize() for i in obj])
+        return JsonResponse([i.user.serialize(request.user) for i in obj],safe=False)
 @csrf_exempt
 def edit_post(request):
     if request.method!="POST":
@@ -98,16 +110,16 @@ def follow(request,user_id,type):
             obj=Follows(user=obj1)
             obj.save()
             obj.follower.add(request.user)
+            obj.save()
         else:
             obj=Follows.objects.get(user=obj1)
             obj.follower.add(request.user)
         return JsonResponse({"message": f"{obj1.username} was followed by {request.user}."}, status=201)
     elif(type=="Unfollow"):
          
-        obj1=User.objects.get(id=user_id)
-        obj=Follows.objects.filter(user=obj1,follower=request.user)
-        if len(obj)!=0:
-            obj[0].delete()
+        user_obj=get_object_or_404(User, username=request.user)
+        post=Follows(user=user_id)
+        post.follower.remove(user_obj)
          
         return JsonResponse({"message": f"{obj1.username} was unfollowed by {request.user}."}, status=201)
 
