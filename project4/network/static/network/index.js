@@ -36,9 +36,10 @@ function all_posts(){
          });
      });
 
-    fetch("get_posts/posts").then(response=>response.json()).then(posts=>{
+    fetch("get_posts/all_posts").then(response=>response.json()).then(posts=>{
         console.log(posts);
-         load_posts(posts,"all_posts");
+         //load_posts(posts,"all_posts");
+         pagination(posts,"all_posts",1);
     });
     document.querySelector("#all_posts").innerHTML="";
 
@@ -61,8 +62,8 @@ function profile(status,name=null){
                      document.querySelector(".followers").innerHTML=`<span>${element.followers} followers</span> <span>${element.following} following</span> `
                      fetch(`get_profile/${element.id}`).then(response=> response.json()).then(post=>{
                         console.log(post);
-                         load_posts(post,"profile");
-                           
+                         //load_posts(post,"profile_user");
+                           pagination(post,"profile_user",1);
                     })});
                     });
 
@@ -105,7 +106,7 @@ else{
                             /*window.f_y-=1;*/
                             fetch(`follow/${name.id}/follow`);
                             name.followers+=1;
-                            document.querySelector(".followers").innerHTML=`<span>${ name.following} followers</span> <span>${name.followers} following</span> `;
+                            document.querySelector(".followers").innerHTML=`<span>${ name.followers} followers</span> <span>${name.following} following</span> `;
                          }
                          else if(document.querySelector("#follow").innerHTML=="Unfollow"){
                             console.log("Unfollowed")
@@ -120,7 +121,8 @@ else{
                      fetch(`get_profile/${name.id}`).then(response=> response.json()).then(post=>{
                         console.log(post);
                          
-                     load_posts(post,"profile");
+                     //load_posts(post,"profile");
+                     pagination(post,"profile",1);
                     });
                      
                     document.querySelector(".posts").innerHTML="";
@@ -137,10 +139,27 @@ function following(){
     document.querySelector("#following-page").style.display="block";
     document.querySelector("#search-results").style.display="none";
     document.querySelector("#edit-page").style.display="none";
+    var main=document.querySelector("#following_page_posts");
+    main.style.position="relative";
+    main.style.left="22%";
+    
+    fetch("get_posts/posts").then(response=>response.json()).then(accounts=>{
+        console.log(accounts);
+        remove_child(main);
+        pagination(accounts,"following",1);
+             
+
+        
+        
+       
+    });
 }
 
 function load_posts(posts,page_name){
     //console.log(status);
+    remove_child(document.querySelector("#profile_posts"));
+    remove_child(document.querySelector("#all_posts"));
+    remove_child(document.querySelector("#following_page_posts"));
     posts.forEach(elements=>{
          console.log(page_name);
         const b=document.createElement("div");
@@ -163,7 +182,7 @@ function load_posts(posts,page_name){
         post.style.fontSize="170%";
         post.style.position="relative";
         post.style.left="60px";
-        if(page_name=="profile"){
+        if(page_name=="profile_user"){
         var edit_button=document.createElement("button");
         edit_button.innerHTML="Edit";
         edit_button.style.display="inline";
@@ -175,7 +194,7 @@ function load_posts(posts,page_name){
         edit_button.style.border="solid #5de9eb";
         edit_button.style.background="#192841";
         edit_button.style.outline="none";
-
+        b.append(edit_button);
         edit_button.addEventListener("click",()=>{
             
             edit_page(elements);
@@ -196,6 +215,7 @@ function load_posts(posts,page_name){
              if(status==true){
                 fetch(`like_posts/${elements.id}/dislike`);
                 status=false;
+                elements.relation=false;
                 elements.likes-=1;
                 num_likes.innerHTML=elements.likes;
                 img1.src="https://image.flaticon.com/icons/png/128/833/833300.png";
@@ -203,6 +223,7 @@ function load_posts(posts,page_name){
             else if(status==false){
                 fetch(`like_posts/${elements.id}/like`);
                 status=true;
+                elements.relation=true;
                 elements.likes+=1;
                 num_likes.innerHTML=elements.likes;
                 img1.src="https://image.flaticon.com/icons/png/128/2589/2589175.png";
@@ -234,7 +255,7 @@ function load_posts(posts,page_name){
         b.append(img);
         b.append(title);
         b.append(time);
-        b.append(edit_button);
+       
         b.append(post);
         b.append(likes);
         b.append(num_likes);
@@ -248,20 +269,31 @@ function load_posts(posts,page_name){
             b.style.backgroundColor="#192841";
         }
          
-        if(page_name=="profile"){
+        
+        if(page_name=="profile" || page_name=="profile_user"){
+            
             document.querySelector("#profile_posts").append(b);
         }
         else if(page_name=="all_posts"){
+            
             document.querySelector("#all_posts").append(b);
         }
-        
+        else if(page_name=="following"){
+            
+            document.querySelector("#following_page_posts").append(b);
+        }
+      
         
     });
     
 
 }
 
- 
+function remove_child(parent){
+    while(parent.firstChild){
+        parent.removeChild(parent.firstChild);
+    }
+}
  
 function search_results(){
     document.querySelector("#title").innerHTML="Search Results";
@@ -338,17 +370,58 @@ function edit_page(post){
     document.querySelector("#edit-post-form").addEventListener("submit",(e)=>{
         e.preventDefault();
         fetch("edit_post/",{
+        
             method:"POST",
             body:JSON.stringify({
                 id:post.id,
                 updated_post:document.querySelector("#edit-post-input").value
             })
-        }).then(response=>response.json()).then(console.log("edited"))
+        }).then(response=>response.json()).then(alert("Post Updated"))
     });
 
 
 }
+let start_page=9;
 
  
+
+function pagination(posts,type,pos){
+    load_posts(posts.slice((pos*10)-10,(pos*10)-1),type);
+    if(type=="all_posts"){
+        console.log(type);
+    var b=document.querySelector("#all_post_pagination");}
+    else if(type=="following"){
+        var b=document.querySelector("#following_pagination");
+    }
+    else{
+        console.log(type);
+        var b=document.querySelector("#profile_pagination");
+    }
+    
+    b.style.color="white";
+    b.style.border="solid #5de9eb";
+    b.style.padding="2px";
+    var n=posts.length/10;
+    b.innerHTML="";
+    for(var i=0;i<parseInt(n)+1;i++){
+        let button=document.createElement("button");
+        button.innerHTML=i+1;
+        button.style.backgroundColor="#5de9eb";
+        button.style.border="none";
+        button.style.margin="2px";
+        button.style.padding="5px";
+        button.style.outline="none";
+        b.append(button); 
+
+        button.addEventListener("click",()=>{
+            var pos=button.innerHTML;
+            load_posts(posts.slice((pos*10)-10,(pos*10)-1),type);
+        });}
+   
+
+
+    
+     
+}  
  
 

@@ -1,6 +1,7 @@
 {% extends "network/layout.html" %}
 {% load static %}
 {% block body %}
+{% if user.is_authenticated %}
     <div id="title"></div>
 
     <div id="search-bar">
@@ -20,7 +21,11 @@
              <button id="edit-profile">Edit Profile</button> 
             
         </div>
+        <div id="posts-page"> 
+        <div class="pagination" id="profile_pagination"></div>
         <div class="posts" id="profile_posts"></div>
+        
+        </div>
     </div>
         
     <div id="search-results"> 
@@ -45,12 +50,17 @@
 
             </form>
         </div>
+       <div class="post_page"> 
+        <div id="all_post_pagination" class="pagination"></div>
         <div class="posts" id="all_posts"></div>
     </div>
-
-
-
-    <div id="following-page"></div>
+    </div>
+    <div id="following-page">
+        <div id="following_posts">
+        <div id="following_pagination" class="pagination"></div>
+        <div id="following_page_posts" class="posts"></div>
+    </div>
+    </div>
 
  
 
@@ -58,8 +68,10 @@
       
 
 
-      
+{% endif %}    
 {% endblock %}
+
+
 
 {% block script %}
          <script src="{% static 'network/index.js' %}"></script>

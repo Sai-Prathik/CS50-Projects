@@ -180,3 +180,34 @@ body{
     background-color: #1DA1F2;
 
 }
+
+.pagination{
+    position:sticky;
+    top:100px;   
+    float:right;
+    right: 20%;
+}
+
+#following-page{
+    position:relative;
+    top:30px;
+    padding:20px;
+   
+}
+
+#following_posts{
+    
+    padding:10px;
+}
+
+#following_pagination{
+    position:sticky;
+    top:40px;
+}
+
+#following_page_posts{
+    position:absolute;
+    
+}
+
+ 
